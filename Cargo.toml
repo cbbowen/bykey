@@ -1,0 +1,13 @@
+[package]
+name = "bykey"
+version = "0.2.0"
+edition = "2021"
+readme = "README.md"
+license = "MIT"
+description = "Wrapper that supports comparison by a key"
+keywords = ["no_std"]
+repository = "https://github.com/cbbowen/bykey"
+
+[dev-dependencies]
+proptest = "1.2"
+mockall = "0.11.4"

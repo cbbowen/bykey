@@ -37,6 +37,10 @@ impl<V, F> ByKey<V, F> {
     pub fn inner(&self) -> &V {
         &self.value
     }
+
+    pub fn inner_mut(&mut self) -> &mut V {
+        &mut self.value
+    }
 }
 
 impl<V, F: KeyFunc<V>> ByKey<V, F> {
@@ -106,6 +110,20 @@ impl<V, F> From<V> for ByKey<V, F> {
     }
 }
 
+impl<V, F> core::ops::Deref for ByKey<V, F> {
+    type Target = V;
+
+    fn deref(&self) -> &Self::Target {
+        self.inner()
+    }
+}
+
+impl<V, F> core::ops::DerefMut for ByKey<V, F> {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        self.inner_mut()
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -137,6 +155,28 @@ mod tests {
     fn inner() {
         let u = Unique::new();
         assert_eq!(TestByKey::new(u).inner(), &u);
+    }
+
+    #[test]
+    fn inner_mut() {
+        let mut v = TestByKey::new(Unique::new());
+        let u = Unique::new();
+        *v.inner_mut() = u;
+        assert_eq!(v.into_inner(), u);
+    }
+
+    #[test]
+    fn deref() {
+        let u = Unique::new();
+        assert_eq!(*TestByKey::new(u), u);
+    }
+
+    #[test]
+    fn deref_mut() {
+        let mut v = TestByKey::new(Unique::new());
+        let u = Unique::new();
+        *v = u;
+        assert_eq!(v.into_inner(), u);
     }
 
     #[test]
